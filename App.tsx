@@ -1,20 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { Provider, useDispatch } from 'react-redux';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { store } from './src/store';
+import { migrateInvalidFontSize } from './src/store/slices/preferencesSlice';
+import AppNavigator from './src/navigation/AppNavigator';
+import NotificationHandler from './src/components/NotificationHandler';
+
+// Migration component to fix any invalid state
+const AppInitializer: React.FC = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Fix any invalid fontSize values from previous versions
+    dispatch(migrateInvalidFontSize());
+  }, [dispatch]);
+
+  return (
+    <NotificationHandler>
+      <AppNavigator />
+    </NotificationHandler>
+  );
+};
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <AppInitializer />
+      </SafeAreaProvider>
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
