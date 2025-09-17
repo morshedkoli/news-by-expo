@@ -67,8 +67,7 @@ export interface OfflineArticle {
 export type RootStackParamList = {
   Home: undefined;
   ArticleReader: { articleId: string };
-  ArticleDetail: { id: string };
-  Category: { categoryId: string };
+  Category: { categoryId: string; categoryName: string };
   Settings: undefined;
   NotificationDebug: undefined;
 };

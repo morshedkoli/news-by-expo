@@ -16,12 +16,19 @@ export const API_CONFIG = {
   },
   TIMEOUT: 10000,
   RETRY_ATTEMPTS: 3,
+  // WebSocket configuration
+  WEBSOCKET: {
+    ENABLED: getEnvVar('WEBSOCKET_ENABLED', 'false') === 'true',
+    URL: getEnvVar('WEBSOCKET_URL', 'wss://news-admin-panel-ruby.vercel.app/ws'),
+    MAX_RECONNECT_ATTEMPTS: 3,
+    RECONNECT_DELAY: 1000,
+  },
 };
 
 export const APP_CONFIG = {
-  NAME: 'News App',
+  NAME: 'News Hut',
   VERSION: '1.0.0',
-  BUNDLE_ID: 'com.yourcompany.newsapp',
+  BUNDLE_ID: 'com.yourcompany.newshut',
   PAGINATION: {
     DEFAULT_LIMIT: 20,
     MAX_LIMIT: 50,

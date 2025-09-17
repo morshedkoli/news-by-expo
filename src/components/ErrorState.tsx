@@ -4,6 +4,7 @@ import { Text, Button, Surface } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, SPACING } from '../constants';
+import Logo from './Logo';
 
 interface ErrorStateProps {
   title?: string;
@@ -28,16 +29,7 @@ const ErrorState: React.FC<ErrorStateProps> = ({
           style={styles.gradient}
         >
           <View style={styles.iconContainer}>
-            <LinearGradient
-              colors={[COLORS.error + '20', COLORS.error + '10']}
-              style={styles.iconBackground}
-            >
-              <Ionicons 
-                name={icon} 
-                size={32} 
-                color={COLORS.error} 
-              />
-            </LinearGradient>
+            <Logo size={64} />
           </View>
           
           <Text variant="headlineSmall" style={styles.title}>

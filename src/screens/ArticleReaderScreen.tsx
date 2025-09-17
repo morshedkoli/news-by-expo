@@ -16,6 +16,7 @@ import { useAppSelector } from '../hooks/redux';
 import OptimizedImage from '../components/OptimizedImage';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorState from '../components/ErrorState';
+import Logo from '../components/Logo';
 
 type ArticleReaderNavigationProp = StackNavigationProp<RootStackParamList, 'ArticleReader'>;
 type ArticleReaderRouteProp = RouteProp<RootStackParamList, 'ArticleReader'>;

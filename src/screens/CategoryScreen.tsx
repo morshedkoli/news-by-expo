@@ -12,6 +12,7 @@ import ArticleCard from '../components/ArticleCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorState from '../components/ErrorState';
 import EmptyState from '../components/EmptyState';
+import LogoCompact from '../components/LogoCompact';
 
 type CategoryNavigationProp = StackNavigationProp<RootStackParamList, 'Category'>;
 type CategoryRouteProp = RouteProp<RootStackParamList, 'Category'>;
@@ -90,7 +91,10 @@ const CategoryScreen: React.FC<CategoryScreenProps> = ({ navigation, route }) =>
       <View style={styles.container}>
         <Appbar.Header style={styles.header}>
           <Appbar.BackAction onPress={handleGoBack} />
-          <Appbar.Content title={categoryName} />
+          <View style={styles.headerContent}>
+            <LogoCompact size={24} style={styles.headerLogo} />
+            <Text style={styles.headerTitle}>{categoryName}</Text>
+          </View>
         </Appbar.Header>
         <ErrorState
           title="Failed to load articles"
@@ -107,7 +111,10 @@ const CategoryScreen: React.FC<CategoryScreenProps> = ({ navigation, route }) =>
       <View style={styles.container}>
         <Appbar.Header style={styles.header}>
           <Appbar.BackAction onPress={handleGoBack} />
-          <Appbar.Content title={categoryName} />
+          <View style={styles.headerContent}>
+            <LogoCompact size={24} style={styles.headerLogo} />
+            <Text style={styles.headerTitle}>{categoryName}</Text>
+          </View>
         </Appbar.Header>
         <LoadingSpinner message={`Loading ${categoryName} articles...`} />
       </View>
@@ -120,7 +127,10 @@ const CategoryScreen: React.FC<CategoryScreenProps> = ({ navigation, route }) =>
       <View style={styles.container}>
         <Appbar.Header style={styles.header}>
           <Appbar.BackAction onPress={handleGoBack} />
-          <Appbar.Content title={categoryName} />
+          <View style={styles.headerContent}>
+            <LogoCompact size={24} style={styles.headerLogo} />
+            <Text style={styles.headerTitle}>{categoryName}</Text>
+          </View>
         </Appbar.Header>
         <EmptyState
           title="No articles found"
@@ -134,7 +144,10 @@ const CategoryScreen: React.FC<CategoryScreenProps> = ({ navigation, route }) =>
     <View style={styles.container}>
       <Appbar.Header style={styles.header}>
         <Appbar.BackAction onPress={handleGoBack} />
-        <Appbar.Content title={categoryName} />
+        <View style={styles.headerContent}>
+          <LogoCompact size={24} style={styles.headerLogo} />
+          <Text style={styles.headerTitle}>{categoryName}</Text>
+        </View>
       </Appbar.Header>
       
       <FlatList
@@ -184,6 +197,19 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: COLORS.primary,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  headerLogo: {
+    marginRight: SPACING.sm,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: COLORS.text.inverse,
   },
   // FlatList Styles
   flatList: {

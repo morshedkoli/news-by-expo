@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Hut Icon Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #FF5722;
+            text-align: center;
+        }
+        .icon-preview {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .icon-item {
+            text-align: center;
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #FF5722;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #E64A19;
+        }
+        .instructions {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏠 News Hut Icon Generator</h1>
+        
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Click "Generate All Icons" below</li>
+                <li>Right-click each generated icon and "Save image as..."</li>
+                <li>Save with the exact filenames shown</li>
+                <li>Replace the files in your assets/ folder</li>
+            </ol>
+        </div>
+
+        <div class="icon-preview">
+            <h3>Original Logo Preview:</h3>
+            <div id="originalLogo"></div>
+        </div>
+
+        <button onclick="generateAllIcons()">Generate All Icons</button>
+        <button onclick="downloadAll()">Download All (ZIP)</button>
+
+        <div class="icon-grid" id="iconGrid">
+            <!-- Icons will be generated here -->
+        </div>
+    </div>
+
+    <script>
+        // SVG logo content
+        const svgContent = `<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle for better app icon appearance -->
+  <circle cx="256" cy="256" r="240" fill="#F8F9FA"/>
+  
+  <!-- House shape with orange roof -->
+  <g>
+    <!-- Roof shadow for depth -->
+    <path d="M256 80 L420 200 L420 215 L92 215 L92 200 L256 80 Z" fill="#E64A19" opacity="0.3"/>
+    
+    <!-- Main roof -->
+    <path d="M256 70 L415 195 L415 205 L97 205 L97 195 L256 70 Z" fill="#FF5722" stroke="#263238" stroke-width="12" stroke-linejoin="round"/>
+    
+    <!-- Roof highlight -->
+    <path d="M256 70 L415 195 L97 195 L256 70 Z" fill="url(#roofGradient)"/>
+    
+    <!-- Roof dot -->
+    <circle cx="256" cy="150" r="10" fill="#263238"/>
+    
+    <!-- House body shadow -->
+    <rect x="105" y="205" width="302" height="222" rx="20" ry="20" fill="#E0E0E0" opacity="0.3"/>
+    
+    <!-- House body -->
+    <rect x="100" y="200" width="312" height="222" rx="20" ry="20" fill="#FFFFFF" stroke="#263238" stroke-width="12"/>
+    
+    <!-- NEWS text -->
+    <text x="256" y="290" font-family="Arial Black, Arial, sans-serif" font-size="48" font-weight="900" text-anchor="middle" fill="#263238">NEWS</text>
+    
+    <!-- News lines (left side) -->
+    <rect x="130" y="320" width="70" height="6" rx="3" fill="#263238"/>
+    <rect x="130" y="335" width="70" height="6" rx="3" fill="#263238"/>
+    <rect x="130" y="350" width="50" height="6" rx="3" fill="#263238"/>
+    
+    <!-- News image placeholder (right side) -->
+    <rect x="320" y="320" width="62" height="40" rx="6" fill="#263238"/>
+  </g>
+  
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="roofGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF7043;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#FF5722;stop-opacity:0" />
+    </linearGradient>
+  </defs>
+</svg>`;
+
+        // Icon sizes needed
+        const iconSizes = {
+            'icon.png': 1024,
+            'adaptive-icon.png': 1024,
+            'favicon.png': 48,
+            'splash-icon.png': 1024
+        };
+
+        // Show original logo
+        document.getElementById('originalLogo').innerHTML = svgContent;
+
+        function svgToPng(svgString, size, callback) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = size;
+            canvas.height = size;
+
+            const img = new Image();
+            const svgBlob = new Blob([svgString], {type: 'image/svg+xml'});
+            const url = URL.createObjectURL(svgBlob);
+
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0, size, size);
+                URL.revokeObjectURL(url);
+                callback(canvas);
+            };
+
+            img.src = url;
+        }
+
+        function generateAllIcons() {
+            const grid = document.getElementById('iconGrid');
+            grid.innerHTML = '';
+
+            Object.entries(iconSizes).forEach(([filename, size]) => {
+                svgToPng(svgContent, size, (canvas) => {
+                    const iconItem = document.createElement('div');
+                    iconItem.className = 'icon-item';
+                    
+                    const title = document.createElement('h4');
+                    title.textContent = filename;
+                    
+                    const sizeInfo = document.createElement('p');
+                    sizeInfo.textContent = `${size}x${size}px`;
+                    sizeInfo.style.color = '#666';
+                    
+                    const downloadBtn = document.createElement('button');
+                    downloadBtn.textContent = 'Download';
+                    downloadBtn.onclick = () => downloadCanvas(canvas, filename);
+                    
+                    // Scale canvas for display
+                    const displayCanvas = canvas.cloneNode();
+                    const displayCtx = displayCanvas.getContext('2d');
+                    displayCanvas.width = 150;
+                    displayCanvas.height = 150;
+                    displayCtx.drawImage(canvas, 0, 0, 150, 150);
+                    
+                    iconItem.appendChild(title);
+                    iconItem.appendChild(displayCanvas);
+                    iconItem.appendChild(sizeInfo);
+                    iconItem.appendChild(downloadBtn);
+                    
+                    grid.appendChild(iconItem);
+                });
+            });
+        }
+
+        function downloadCanvas(canvas, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function downloadAll() {
+            // Generate and download all icons
+            Object.entries(iconSizes).forEach(([filename, size], index) => {
+                setTimeout(() => {
+                    svgToPng(svgContent, size, (canvas) => {
+                        downloadCanvas(canvas, filename);
+                    });
+                }, index * 500); // Stagger downloads
+            });
+        }
+    </script>
+</body>
+</html>

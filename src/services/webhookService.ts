@@ -22,16 +22,22 @@ interface WebhookPayload {
 class WebhookService {
   private websocket: WebSocket | null = null;
   private reconnectAttempts = 0;
-  private maxReconnectAttempts = 5;
-  private reconnectDelay = 1000; // Start with 1 second
+  private maxReconnectAttempts = API_CONFIG.WEBSOCKET.MAX_RECONNECT_ATTEMPTS;
+  private reconnectDelay = API_CONFIG.WEBSOCKET.RECONNECT_DELAY;
   private isConnecting = false;
 
   async initialize(): Promise<void> {
     try {
+      // Check if WebSocket is enabled in configuration
+      if (!API_CONFIG.WEBSOCKET.ENABLED) {
+        console.log('📡 WebSocket disabled in configuration. Real-time notifications unavailable.');
+        return;
+      }
+
       // Check if real-time notifications are enabled
       const realtimeEnabled = await AsyncStorage.getItem('realtime_notifications');
       if (realtimeEnabled === 'false') {
-        console.log('📡 Real-time notifications disabled');
+        console.log('📡 Real-time notifications disabled by user');
         return;
       }
 
@@ -53,16 +59,28 @@ class WebhookService {
       const deviceToken = await AsyncStorage.getItem('expo_push_token');
       if (!deviceToken) {
         console.log('📡 No device token available for webhook connection');
+        this.isConnecting = false;
         return;
       }
 
-      // Connect to webhook endpoint (replace with your actual webhook URL)
-      const websocketUrl = `wss://news-admin-panel-ruby.vercel.app/ws?token=${encodeURIComponent(deviceToken)}`;
+      // Use WebSocket URL from configuration
+      const websocketUrl = `${API_CONFIG.WEBSOCKET.URL}?token=${encodeURIComponent(deviceToken)}`;
       
+      console.log('📡 Attempting WebSocket connection...');
       this.websocket = new WebSocket(websocketUrl);
+
+      // Set a connection timeout
+      const connectionTimeout = setTimeout(() => {
+        if (this.websocket && this.websocket.readyState === WebSocket.CONNECTING) {
+          console.log('📡 WebSocket connection timeout, closing...');
+          this.websocket.close();
+          this.isConnecting = false;
+        }
+      }, 5000);
 
       this.websocket.onopen = () => {
         console.log('📡 Webhook connection established');
+        clearTimeout(connectionTimeout);
         this.reconnectAttempts = 0;
         this.reconnectDelay = 1000;
         this.isConnecting = false;
@@ -73,18 +91,34 @@ class WebhookService {
       };
 
       this.websocket.onclose = (event) => {
-        console.log('📡 Webhook connection closed:', event.code, event.reason);
+        clearTimeout(connectionTimeout);
         this.isConnecting = false;
+        
+        // Handle different close codes
+        if (event.code === 1006 || event.reason.includes('404')) {
+          console.log('📡 WebSocket endpoint not available (404). Real-time notifications disabled.');
+          this.reconnectAttempts = this.maxReconnectAttempts; // Stop trying to reconnect
+          return;
+        }
+        
+        console.log('📡 Webhook connection closed:', event.code, event.reason);
         this.scheduleReconnect();
       };
 
       this.websocket.onerror = (error) => {
-        console.error('📡 Webhook connection error:', error);
+        clearTimeout(connectionTimeout);
+        console.log('📡 WebSocket connection failed - endpoint may not be available');
         this.isConnecting = false;
+        
+        // Don't log the full error object as it's verbose
+        // Instead, check if this is a 404 error and handle gracefully
+        if (this.reconnectAttempts === 0) {
+          console.log('📡 WebSocket service unavailable. App will work without real-time notifications.');
+        }
       };
 
     } catch (error) {
-      console.error('Failed to connect to webhook:', error);
+      console.log('📡 Failed to initialize WebSocket connection:', error instanceof Error ? error.message : 'Unknown error');
       this.isConnecting = false;
       this.scheduleReconnect();
     }
@@ -92,12 +126,12 @@ class WebhookService {
 
   private scheduleReconnect(): void {
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-      console.log('📡 Max reconnection attempts reached, giving up');
+      console.log('📡 Max reconnection attempts reached. Real-time notifications will be disabled.');
       return;
     }
 
     this.reconnectAttempts++;
-    const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1); // Exponential backoff
+    const delay = Math.min(this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1), 30000); // Cap at 30 seconds
 
     console.log(`📡 Scheduling reconnection attempt ${this.reconnectAttempts} in ${delay}ms`);
     

@@ -18,6 +18,8 @@ import CategoryTabs from '../components/CategoryTabs';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorState from '../components/ErrorState';
 import EmptyState from '../components/EmptyState';
+import Logo from '../components/Logo';
+import LogoCompact from '../components/LogoCompact';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -217,10 +219,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <View style={styles.headerContent}>
               {!isSearchMode ? (
                 <>
-                  {/* Title Section */}
+                  {/* Logo and Title Section */}
                   <View style={styles.headerLeft}>
-                    <Text style={styles.headerTitle}>News</Text>
-                    <Text style={styles.headerSubtitle}>Stay updated with latest news</Text>
+                    <View style={styles.logoTitleContainer}>
+                      <LogoCompact size={28} style={styles.headerLogo} animated={true} />
+                      <View style={styles.titleContainer}>
+                        <Text style={styles.headerTitle}>News Hut</Text>
+                        <Text style={styles.headerSubtitle}>Stay updated with latest news</Text>
+                      </View>
+                    </View>
                   </View>
 
                   {/* Header Buttons */}
@@ -482,6 +489,16 @@ const styles = StyleSheet.create({
     paddingLeft: SPACING.sm,
   },
   headerLeft: {
+    flex: 1,
+  },
+  logoTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerLogo: {
+    marginRight: SPACING.sm,
+  },
+  titleContainer: {
     flex: 1,
   },
   headerTitle: {

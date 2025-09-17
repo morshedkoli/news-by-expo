@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { ActivityIndicator, Text, Surface } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, SPACING } from '../constants';
+import Logo from './Logo';
 
 interface LoadingSpinnerProps {
   message?: string;
@@ -20,6 +21,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
           colors={[COLORS.surface, COLORS.backgroundSecondary]}
           style={styles.gradient}
         >
+          <Logo size={size === 'large' ? 48 : 32} style={styles.logo} animated={true} />
           <View style={styles.spinnerContainer}>
             <ActivityIndicator 
               size={size === 'large' ? 32 : 24} 
@@ -55,6 +57,9 @@ const styles = StyleSheet.create({
   gradient: {
     padding: SPACING.lg,
     alignItems: 'center',
+  },
+  logo: {
+    marginBottom: SPACING.sm,
   },
   spinnerContainer: {
     marginBottom: SPACING.md,

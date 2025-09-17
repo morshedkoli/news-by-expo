@@ -1,10 +1,10 @@
 # Push Notifications Setup Guide
 
-This guide explains how to set up push notifications for the NewsApp when new articles are created by the admin.
+This guide explains how to set up push notifications for the News Hut when new articles are created by the admin.
 
 ## Overview
 
-The NewsApp now supports push notifications through multiple channels:
+The News Hut now supports push notifications through multiple channels:
 1. **Polling-based notifications** - Checks for new articles every 5 minutes
 2. **Real-time webhook notifications** - Instant notifications via WebSocket connection
 3. **Manual push notifications** - Admin can send custom notifications
@@ -393,4 +393,4 @@ Track these metrics:
 - Token registration success rate
 - Article view rate from notifications
 
-This completes the push notification setup for the NewsApp. The system provides both real-time and polling-based notifications to ensure users are always informed about new articles.
+This completes the push notification setup for the News Hut. The system provides both real-time and polling-based notifications to ensure users are always informed about new articles.

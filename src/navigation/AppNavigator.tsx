@@ -8,6 +8,7 @@ import navigationService from '../services/navigationService';
 // Import screens (we'll create these next)
 import HomeScreen from '../screens/HomeScreen';
 import ArticleReaderScreen from '../screens/ArticleReaderScreen';
+import CategoryScreen from '../screens/CategoryScreen';
 import NotificationDebug from '../components/NotificationDebug';
 import SettingsScreen from '../screens/SettingsScreen';
 
@@ -68,8 +69,8 @@ const AppNavigator: React.FC = () => {
             }}
           />
           <Stack.Screen 
-            name="ArticleDetail" 
-            component={ArticleReaderScreen}
+            name="Category" 
+            component={CategoryScreen}
             options={{ 
               headerShown: false, // Hide default header since component has custom header
             }}

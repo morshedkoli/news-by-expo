@@ -17,7 +17,7 @@ class NavigationService {
   }
 
   navigateToArticle(articleId: string) {
-    this.navigate('ArticleDetail', { id: articleId });
+    this.navigate('ArticleReader', { articleId: articleId });
   }
 
   navigateToHome() {

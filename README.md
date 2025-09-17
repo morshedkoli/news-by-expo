@@ -1,4 +1,4 @@
-# News Mobile App
+# News Hut Mobile App
 
 A React Native Expo app that connects to your admin dashboard backend to display news articles.
 
@@ -25,7 +25,7 @@ A React Native Expo app that connects to your admin dashboard backend to display
 
 1. **Clone and navigate to the project:**
    ```bash
-   cd NewsApp
+   cd NewsHut
    ```
 
 2. **Install dependencies:**
@@ -66,9 +66,9 @@ Modify app configuration in `app.json`:
 ```json
 {
   "expo": {
-    "name": "Your News App",
+    "name": "News Hut",
     "android": {
-      "package": "com.yourcompany.newsapp"
+      "package": "com.yourcompany.newshut"
     }
   }
 }

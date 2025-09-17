@@ -4,6 +4,7 @@ import { Text, Surface } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, SPACING } from '../constants';
+import Logo from './Logo';
 
 interface EmptyStateProps {
   title?: string;
@@ -24,16 +25,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           style={styles.gradient}
         >
           <View style={styles.iconContainer}>
-            <LinearGradient
-              colors={[COLORS.text.tertiary + '20', COLORS.text.tertiary + '10']}
-              style={styles.iconBackground}
-            >
-              <Ionicons 
-                name={icon} 
-                size={32} 
-                color={COLORS.text.tertiary} 
-              />
-            </LinearGradient>
+            <Logo size={64} />
           </View>
           
           <Text variant="headlineSmall" style={styles.title}>

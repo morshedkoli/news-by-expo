@@ -8,6 +8,7 @@ import { COLORS, SPACING, APP_CONFIG } from '../constants';
 import { useAppSelector, useAppDispatch } from '../hooks/redux';
 import { setTheme, setFontSize, toggleNotifications } from '../store/slices/preferencesSlice';
 import NotificationSettings from '../components/NotificationSettings';
+import Logo from '../components/Logo';
 
 type SettingsNavigationProp = StackNavigationProp<RootStackParamList, 'Settings'>;
 
@@ -113,6 +114,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
         </List.Section>
 
         <View style={styles.footer}>
+          <Logo size={48} style={styles.footerLogo} />
           <Text variant="bodySmall" style={styles.footerText}>
             Built with React Native & Expo
           </Text>
@@ -136,6 +138,9 @@ const styles = StyleSheet.create({
   footer: {
     padding: SPACING.lg,
     alignItems: 'center',
+  },
+  footerLogo: {
+    marginBottom: SPACING.sm,
   },
   footerText: {
     color: COLORS.onBackground + '60',

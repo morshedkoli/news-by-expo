@@ -3,7 +3,7 @@ import { Provider, useDispatch } from 'react-redux';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { store } from './src/store';
 import { migrateInvalidFontSize } from './src/store/slices/preferencesSlice';
-import AppNavigator from './src/navigation/AppNavigator';
+import AppWrapper from './src/components/AppWrapper';
 import NotificationHandler from './src/components/NotificationHandler';
 
 // Migration component to fix any invalid state
@@ -17,7 +17,7 @@ const AppInitializer: React.FC = () => {
 
   return (
     <NotificationHandler>
-      <AppNavigator />
+      <AppWrapper />
     </NotificationHandler>
   );
 };
